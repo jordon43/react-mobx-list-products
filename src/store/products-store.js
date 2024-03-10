@@ -1,4 +1,4 @@
-import {makeAutoObservable} from "mobx";
+import {makeAutoObservable, runInAction} from "mobx";
 import md5 from "md5";
 import ApiService from "../service/api-service";
 
@@ -8,7 +8,10 @@ class ProductsStore {
     brandsInfo = [];
     priceInfo = []
     productInfo = [];
+
+
     countAllProducts = 0;
+    countFilteredProducts = 0
 
     retryCount = 0;
     maxRetryCount = 5;
@@ -20,6 +23,7 @@ class ProductsStore {
     resetProducts = () => {
         this.productsId = null;
         this.productsInfo = null;
+        this.countFilteredProducts = 0
     };
 
     // getAllId = async () => {
@@ -37,8 +41,8 @@ class ProductsStore {
     updateProducts = (newData) => {
         console.log("newData", newData);
         this.productsId = newData;
-        this.countAllProducts = newData.length
-        console.log("this.countAllProducts", this.countAllProducts)
+        this.countFilteredProducts = newData.length
+        console.log("this.countFilteredProducts", this.countFilteredProducts)
     };
 
 
@@ -63,6 +67,7 @@ class ProductsStore {
 
     getProductsId = async (offset = null, limit = null) => {
         try {
+            console.log("asfasfasfasfasfasfasfsf")
             const fetchProductsId = await ApiService.fetchProductsId(
                 this.getHash(),
                 offset,
@@ -71,16 +76,23 @@ class ProductsStore {
             if (fetchProductsId.status === 200) {
                 const jsonData = await fetchProductsId.json();
                 if (offset === null && limit === null) {
-                    this.countAllProducts = jsonData.result.length;
-                    console.log("this.countAllProducts", this.countAllProducts);
+                    runInAction(() => {
+                        this.countAllProducts = jsonData.result.length;
+                        console.log("this.countAllProducts", this.countAllProducts);
+                    })
                 } else {
-                    this.productsId = jsonData.result;
-                    this.retryCount = 0;
+                    runInAction(() => {
+                        this.productsId = jsonData.result;
+                        this.retryCount = 0;
+                    })
                 }
             } else if (this.retryCount < this.maxRetryCount) {
                 console.error("Ошибка:", fetchProductsId.status, "Повтор запроса.");
-                this.retryCount++;
-                await this.getProductsId(this.getHash(), offset, limit);
+                runInAction(() => {
+                    this.retryCount++;
+                    this.getProductsId(this.getHash(), offset, limit);
+                })
+
             } else {
                 console.error("Достигнуто максимальное количество повторных попыток.");
             }
@@ -97,12 +109,17 @@ class ProductsStore {
             );
             if (fetchProductsData.status === 200) {
                 const jsonData = await fetchProductsData.json();
-                this.productsInfo = jsonData.result;
-                this.retryCount = 0;
+                runInAction(() => {
+                    this.productsInfo = jsonData.result;
+                    this.retryCount = 0;
+                })
             } else if (this.retryCount < this.maxRetryCount) {
                 console.error("Ошибка:", fetchProductsData.status, "Повтор запроса.");
-                this.retryCount++;
-                await this.getItems();
+                runInAction(() => {
+                    this.retryCount++;
+                    this.getItems();
+                })
+
             } else {
                 console.error("Достигнуто максимальное количество повторных попыток.");
             }
@@ -141,13 +158,19 @@ class ProductsStore {
                 if (mod === "price") value = Number(value);
                 const fetchFiltered = await ApiService.fetchFiltered(this.getHash(), mod, value);
                 if (fetchFiltered.status === 200) {
-                    const jsonData = fetchFiltered.json();
-                    this.resetProducts()
-                    this.updateProducts(jsonData.result);
+                    const jsonData = await fetchFiltered.json();
+                    runInAction(() => {
+                        console.log("jsonData", jsonData)
+                        this.countFilteredProducts = jsonData.result.length
+                        this.resetProducts()
+                        this.updateProducts(jsonData.result);
+                    })
                 } else if (this.retryCount < this.maxRetryCount) {
                     console.error("Ошибка:", fetchFiltered.status, "Повтор запроса.");
-                    this.retryCount++;
-                    await this.filterProducts();
+                    runInAction(() => {
+                        this.retryCount++;
+                        this.filterProducts();
+                    })
                 } else {
                     console.error("Достигнуто максимальное количество повторных попыток.");
                 }
@@ -155,7 +178,7 @@ class ProductsStore {
                 console.error("Ошибка:", e);
             }
         } else {
-            console.log("ну пиздец че сказать то ещё");
+            console.log("!(selectMod && value)", selectMod && value);
             return 0;
         }
 

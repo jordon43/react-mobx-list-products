@@ -2,7 +2,7 @@ import ProductItem from "../productItem/productItem";
 import "./productsList.sass"
 
 const ProductsList = ({productsInfo}) => {
-    console.log(productsInfo)
+    //console.log(productsInfo)
     return (
         <div className="productsBlock">
             {(productsInfo !== null) ?

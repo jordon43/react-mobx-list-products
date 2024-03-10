@@ -33,6 +33,9 @@
 .filtrationBlock .inputField {
   margin: 15px;
 }
+.filtrationBlock .inputField input:disabled {
+  color: #000000;
+}
 .filtrationBlock .applyButton {
   margin: 5px;
 }

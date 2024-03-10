@@ -16,7 +16,7 @@ const FilterBlock = ({
     return (
         <div className="filtrationBlock">
             <div className="title">
-                <p>Настроки фильтрации: </p>
+                <p>Настройка фильтрации: </p>
             </div>
             <div className="buttonGroup">
                 <Button
@@ -25,7 +25,7 @@ const FilterBlock = ({
                     // color="primary"
                     onClick={() => onChangeMod(mods[0])}
                 >
-                    Brand
+                    Бренд
                 </Button>
                 <Button
                     className={selectMod === mods[1] ? "activeBtn" : ""}
@@ -33,7 +33,7 @@ const FilterBlock = ({
                     // color="primary"
                     onClick={() => onChangeMod(mods[1])}
                 >
-                    Price
+                    Цена
                 </Button>
                 <Button
                     className={selectMod === mods[2] ? "activeBtn" : ""}
@@ -41,7 +41,7 @@ const FilterBlock = ({
                     // color="primary"
                     onClick={() => onChangeMod(mods[2])}
                 >
-                    Product
+                    Название
                 </Button>
             </div>
 
@@ -50,7 +50,7 @@ const FilterBlock = ({
                 <TextField
                     disabled={selectMod === null ? true : false}
                     size="small"
-                    label="Фильтр"
+                    label="Введите значение"
                     id="outlined-basic"
                     variant="outlined"
                     value={valueFilter}

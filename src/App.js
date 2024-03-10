@@ -1,10 +1,9 @@
-import "./App.css";
+import "./styles/App.css";
 import {useEffect, useMemo, useState} from "react";
 import {observer} from "mobx-react-lite";
 import ProductsStore from "./store/products-store";
 import ProductsList from "./components/productsList/productsList";
 import {Box, Pagination} from "@mui/material";
-import ApiService from "./service/api-service";
 import Filtration from "./components/filtration/filtration";
 
 const App = observer(() => {
@@ -12,41 +11,40 @@ const App = observer(() => {
         productsId,
         productsInfo,
         countAllProducts,
+        resetProducts,
         getProductsId,
         getItems,
-        filterProducts
+        filterProducts,
+        countFilteredProducts
     } = ProductsStore;
 
 
     const mods = ["brand", "price", "product"];
     const [selectMod, setSelectMod] = useState(null);
     const [valueFilter, setValueFilter] = useState("");
-
     const [offset, setOffset] = useState(0);
+    const [filtered, setFiltered] = useState(false)
 
 
-    // const filterProducts = async (mod, value) => {
-    //     if (selectMod && value) {
-    //         try {
-    //             if (mod === "price") value = Number(value);
-    //
-    //             console.log(value);
-    //             console.log(mod, value);
-    //             const mem = await ApiService.fetchFiltered(getHash(), mod, value);
-    //             const dataMem = await mem.json();
-    //             console.log(dataMem.result);
-    //             resetProducts()
-    //             updateProducts(dataMem.result);
-    //             setOffset(0)
-    //         } catch (e) {
-    //         }
-    //     } else {
-    //         return 0;
-    //     }
-    //
-    // };
+    const [currentPage, setCurrentPage] = useState(1);
+    const [limit, setLimit] = useState(50);
+
+    const countPage =
+        useMemo(() => {
+            console.log("countAllProducts----->", countAllProducts)
+            console.log("countFilteredProducts----->", countFilteredProducts)
+            if (filtered) {
+                return Math.floor(countFilteredProducts / limit)
+            } else {
+                return Math.floor(countAllProducts / limit)
+            }
+        }, [offset, filtered, countFilteredProducts, countAllProducts]);
+
+    // const [countPage, setCountPage] = useState(0);
+    console.log(countPage)
 
     const onChangeMod = (a) => {
+
         setSelectMod(a)
     }
 
@@ -54,21 +52,23 @@ const App = observer(() => {
         setValueFilter(a)
     }
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [limit, setLimit] = useState(50);
-    const countPage = useMemo(() => Math.floor(countAllProducts / limit), [offset, countAllProducts]);
-
     const filter = (mod, value) => {
+        setFiltered(true)
+        setCurrentPage(1)
         filterProducts(mod, value, selectMod)
         setOffset(0)
     }
     const resetFiltration = () => {
+        setFiltered(false)
         setSelectMod(null)
+        setCurrentPage(1)
         setOffset(0)
+        if (filtered) resetProducts()
     }
 
     useEffect(() => {
         getProductsId();
+        //setCountPage(Math.floor(countAllProducts / limit))
     }, []);
 
     useEffect(() => {
@@ -98,7 +98,7 @@ const App = observer(() => {
             >
             </Filtration>
 
-            {(productsInfo !== null) &&
+            {(countPage >= 1) &&
 
                 <div className="pagination">
                     <Box display="flex" justifyContent="center">
@@ -107,7 +107,7 @@ const App = observer(() => {
                                 count={countPage}
                                 page={currentPage}
                                 onChange={(event, value) => {
-                                    //resetProducts()
+                                    if (!filtered) resetProducts()
                                     setCurrentPage(value);
                                     setOffset(limit * (value - 1))
                                 }}
@@ -122,7 +122,7 @@ const App = observer(() => {
 
             {(productsInfo !== null) ?
                 <ProductsList
-                    productsInfo={selectMod === null
+                    productsInfo={!filtered
                         ? productsInfo
                         : productsInfo.slice(offset, offset + limit)}
                 ></ProductsList>
