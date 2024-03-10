@@ -56,7 +56,6 @@ class ApiService {
     async fetchFiltered(hash, mod, value) {
         const params = {};
         params[mod] = value;
-        console.log("params", params);
         return await fetch("https://api.valantis.store:41000/", {
             method: "POST",
             headers: {
@@ -69,8 +68,6 @@ class ApiService {
             }),
         });
     };
-
-
 }
 
 export default new ApiService();

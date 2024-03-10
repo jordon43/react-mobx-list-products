@@ -1,8 +1,7 @@
 import React from 'react';
 import Button from '@mui/material/Button';
-import Input from '@mui/material/Input';
 import './filtration.sass';
-import {TextField} from "@mui/material"; // Импортируйте стили из файла SCSS
+import {TextField} from "@mui/material";
 
 const FilterBlock = ({
                          mods,
@@ -22,7 +21,6 @@ const FilterBlock = ({
                 <Button
                     className={selectMod === mods[0] ? "activeBtn" : ""}
                     variant={"outlined"}
-                    // color="primary"
                     onClick={() => onChangeMod(mods[0])}
                 >
                     Бренд
@@ -30,7 +28,6 @@ const FilterBlock = ({
                 <Button
                     className={selectMod === mods[1] ? "activeBtn" : ""}
                     variant="outlined"
-                    // color="primary"
                     onClick={() => onChangeMod(mods[1])}
                 >
                     Цена
@@ -38,7 +35,6 @@ const FilterBlock = ({
                 <Button
                     className={selectMod === mods[2] ? "activeBtn" : ""}
                     variant="outlined"
-                    // color="primary"
                     onClick={() => onChangeMod(mods[2])}
                 >
                     Название
@@ -56,7 +52,6 @@ const FilterBlock = ({
                     value={valueFilter}
                     onChange={(e) => onChangeValueFilter(e.target.value)}
                     type="text"
-                    // className="inputField"
                 />
             </div>
 
@@ -64,7 +59,6 @@ const FilterBlock = ({
             <Button
                 disabled={selectMod === null ? true : false}
                 variant="contained"
-                // color="secondary"
                 onClick={() => filterProducts(selectMod, valueFilter)}
                 className="applyButton"
             >
@@ -73,7 +67,6 @@ const FilterBlock = ({
 
             <Button
                 variant="contained"
-                // color="secondary"
                 onClick={() => resetFiltration()}
                 className="resetButton"
             >

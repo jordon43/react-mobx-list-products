@@ -15,7 +15,6 @@ const ProductItem = ({product, key}) => {
             <div className="productPrice">
                 <p>Цена: {product.price}</p>
             </div>
-
         </div>
     );
 };

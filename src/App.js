@@ -25,14 +25,11 @@ const App = observer(() => {
     const [offset, setOffset] = useState(0);
     const [filtered, setFiltered] = useState(false)
 
-
     const [currentPage, setCurrentPage] = useState(1);
     const [limit, setLimit] = useState(50);
 
     const countPage =
         useMemo(() => {
-            console.log("countAllProducts----->", countAllProducts)
-            console.log("countFilteredProducts----->", countFilteredProducts)
             if (filtered) {
                 return Math.floor(countFilteredProducts / limit)
             } else {
@@ -40,11 +37,7 @@ const App = observer(() => {
             }
         }, [offset, filtered, countFilteredProducts, countAllProducts]);
 
-    // const [countPage, setCountPage] = useState(0);
-    console.log(countPage)
-
     const onChangeMod = (a) => {
-
         setSelectMod(a)
     }
 
@@ -68,7 +61,6 @@ const App = observer(() => {
 
     useEffect(() => {
         getProductsId();
-        //setCountPage(Math.floor(countAllProducts / limit))
     }, []);
 
     useEffect(() => {

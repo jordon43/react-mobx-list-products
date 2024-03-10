@@ -5,14 +5,8 @@ import ApiService from "../service/api-service";
 class ProductsStore {
     productsId = null;
     productsInfo = null;
-    brandsInfo = [];
-    priceInfo = []
-    productInfo = [];
-
-
     countAllProducts = 0;
     countFilteredProducts = 0
-
     retryCount = 0;
     maxRetryCount = 5;
 
@@ -26,34 +20,10 @@ class ProductsStore {
         this.countFilteredProducts = 0
     };
 
-    // getAllId = async () => {
-    //     try {
-    //         const fetchProductsAllId = await ApiService.fetchProductsId(
-    //             this.getHash(),
-    //             offset,
-    //             limit,
-    //         );
-    //     }catch (e) {
-    //
-    //     }
-    // };
-
     updateProducts = (newData) => {
-        console.log("newData", newData);
         this.productsId = newData;
         this.countFilteredProducts = newData.length
-        console.log("this.countFilteredProducts", this.countFilteredProducts)
     };
-
-
-    getPaginationProductInfo(isFilter, offset, limit) {
-        if (isFilter === true) {
-            return this.productsInfo.slice(offset, offset + limit)
-        } else {
-            if (this.productsInfo)
-                return this.productsInfo
-        }
-    }
 
     getHash = () => {
         const date = new Date();
@@ -67,7 +37,6 @@ class ProductsStore {
 
     getProductsId = async (offset = null, limit = null) => {
         try {
-            console.log("asfasfasfasfasfasfasfsf")
             const fetchProductsId = await ApiService.fetchProductsId(
                 this.getHash(),
                 offset,
@@ -78,7 +47,6 @@ class ProductsStore {
                 if (offset === null && limit === null) {
                     runInAction(() => {
                         this.countAllProducts = jsonData.result.length;
-                        console.log("this.countAllProducts", this.countAllProducts);
                     })
                 } else {
                     runInAction(() => {
@@ -128,30 +96,6 @@ class ProductsStore {
         }
     };
 
-    toFormatForFilter = (data) => {
-        return data.filter((item) => {
-            if (data.includes(item)) {
-                return item;
-            }
-        });
-    };
-
-    getFilters = async (offset, limit, mode) => {
-        const fetchProductsFilter = await ApiService.fetchProductsFilter(
-            this.getHash(),
-            mode,
-            offset,
-            limit,
-        );
-        const jsonData = await fetchProductsFilter.json();
-        if (mode === "brand")
-            this.brandsInfo = this.toFormatForFilter(jsonData.result);
-        if (mode === "price")
-            this.priceInfo = this.toFormatForFilter(jsonData.result);
-        if (mode === "product")
-            this.productInfo = this.toFormatForFilter(jsonData.result);
-    };
-
     filterProducts = async (mod, value, selectMod) => {
         if (selectMod && value) {
             try {
@@ -160,7 +104,6 @@ class ProductsStore {
                 if (fetchFiltered.status === 200) {
                     const jsonData = await fetchFiltered.json();
                     runInAction(() => {
-                        console.log("jsonData", jsonData)
                         this.countFilteredProducts = jsonData.result.length
                         this.resetProducts()
                         this.updateProducts(jsonData.result);
@@ -178,7 +121,6 @@ class ProductsStore {
                 console.error("Ошибка:", e);
             }
         } else {
-            console.log("!(selectMod && value)", selectMod && value);
             return 0;
         }
 
