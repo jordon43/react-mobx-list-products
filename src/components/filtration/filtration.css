@@ -1,0 +1,59 @@
+.filtrationBlock {
+  width: 500px;
+  border: black solid 1px;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 0 auto 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.filtrationBlock .title {
+  padding: 5px 5px 15px;
+}
+.filtrationBlock .title p {
+  margin: 0;
+}
+.filtrationBlock .buttonGroup {
+  padding: 5px;
+  display: flex;
+  gap: 5px;
+}
+.filtrationBlock .buttonGroup button {
+  margin: 0 10px;
+}
+.filtrationBlock .buttonGroup button:hover {
+  scale: 1.01;
+}
+.filtrationBlock .buttonGroup .activeBtn {
+  background-color: rgba(222, 222, 222, 0.51);
+  color: #000000;
+  border: black 1px solid;
+}
+.filtrationBlock .inputField {
+  margin: 15px;
+}
+.filtrationBlock .applyButton {
+  margin: 5px;
+}
+.filtrationBlock .applyButton:hover {
+  scale: 1.01;
+}
+.filtrationBlock .resetButton {
+  margin: 5px;
+  background: #ff6e6e;
+}
+.filtrationBlock .resetButton:hover {
+  scale: 1.01;
+  background: #ff5a5a;
+}
+.filtrationBlock .otherButtonStyle {
+  margin: 5px;
+  background-color: #2196f3;
+  color: white;
+}
+.filtrationBlock .otherButtonStyle:hover {
+  background-color: #0b7dda;
+}
+
+/*# sourceMappingURL=filtration.css.map */
